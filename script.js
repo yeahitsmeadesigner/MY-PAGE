@@ -112,3 +112,59 @@ buttons.forEach(b=>b.addEventListener('click',()=>switchProfile(b.dataset.profil
     console.warn('Visitor notification unavailable:',error);
   }
 })();
+
+/* ==========================================
+   SCROLL REVEAL + COMPONENT MOTION
+   ========================================== */
+(function initMotion(){
+  const motionTargets=[
+    '.intro-band',
+    '.section',
+    '.skill-grid > div',
+    '.project',
+    '.timeline',
+    '.design-skills span',
+    '.tool-row > div',
+    '.work-stack > article',
+    '.cta-section',
+    '.contact-card',
+    '.contact-actions',
+    'footer'
+  ];
+
+  const elements=[];
+  motionTargets.forEach(selector=>{
+    document.querySelectorAll(selector).forEach(el=>{
+      if(!el.classList.contains('motion-ready')){
+        el.classList.add('motion-ready');
+        elements.push(el);
+      }
+    });
+  });
+
+  // Stagger repeated components so grids/lists enter naturally.
+  document.querySelectorAll('.skill-grid > div,.design-skills span,.tool-row > div,.work-stack > article').forEach((el,index)=>{
+    el.dataset.delay=String((index%5)+1);
+  });
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    elements.forEach(el=>el.classList.add('is-visible'));
+    return;
+  }
+
+  if(!('IntersectionObserver' in window)){
+    elements.forEach(el=>el.classList.add('is-visible'));
+    return;
+  }
+
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+
+  elements.forEach(el=>observer.observe(el));
+})();
