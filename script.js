@@ -31,3 +31,39 @@ function switchProfile(name){const isTech=name==='technical';technical.classList
       console.warn('Viewer counter unavailable:',error);
     });
 })();
+
+// Visitor email notification (Google Apps Script backend).
+(function initVisitorNotification(){
+  // Paste your deployed Google Apps Script /exec URL here after deployment.
+  // Keep this endpoint public; never put Gmail passwords or API secrets here.
+  const endpoint='';
+
+  if(!endpoint) return;
+
+  try{
+    const sessionKey='my_page_visitor_session';
+    let sessionId=sessionStorage.getItem(sessionKey);
+    if(!sessionId){
+      sessionId=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2));
+      sessionStorage.setItem(sessionKey,sessionId);
+    }
+
+    const params=new URLSearchParams({
+      page:location.href,
+      path:location.pathname,
+      referrer:document.referrer||'Direct',
+      screen:window.screen.width+'x'+window.screen.height,
+      viewport:window.innerWidth+'x'+window.innerHeight,
+      session:sessionId,
+      profile:document.querySelector('.nav-link.active')?.dataset.profile||'technical',
+      timestamp:new Date().toISOString()
+    });
+
+    // GET beacon keeps this reliable on page load/unload without blocking the site.
+    const beacon=new Image();
+    beacon.referrerPolicy='no-referrer-when-downgrade';
+    beacon.src=endpoint+'?'+params.toString();
+  }catch(error){
+    console.warn('Visitor notification unavailable:',error);
+  }
+})();
