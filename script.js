@@ -79,7 +79,7 @@ buttons.forEach(b=>b.addEventListener('click',()=>switchProfile(b.dataset.profil
 
 // Visitor email notification (Google Apps Script backend).
 (function initVisitorNotification(){
-  const endpoint='https://script.google.com/macros/s/AKfycbylOhn_Ae8kjqjSZYJfX1eqmUGCvHFFlfNHxFwDmlbm-jHTYdgLenn6dX5MMwSNg0W2Bw/exec';
+  const endpoint='https://script.google.com/macros/s/AKfycbyRkF1dGg1y-XEAWv-R7ZH0PWOF5pun-Ri7V4ZuDwU6oWQftNlFxngPWSVHgXtkgFfOnQ/exec';
 
   try{
     const sessionKey='my_page_visitor_session';
